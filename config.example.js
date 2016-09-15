@@ -11,19 +11,24 @@ config = {
     // When running Ghost in the wild, use the production environment.
     // Configure your URL and mail settings here
     production: {
-        url: 'http://my-ghost-blog.com',
+        url: 'http://ublogit.herokuapp.com/',
+        fileStorage: false,
         mail: {},
         database: {
-            client: 'sqlite3',
+            client: 'postgres',
             connection: {
-                filename: path.join(__dirname, '/content/data/ghost.db')
+                host: process.env.POSTGRES_HOST,
+                user: process.env.POSTGRES_USER,
+                password: process.env.POSTGRES_PASSWORD,
+                database: process.env.POSTGRES_DATABASE,
+                port: '5432'
             },
             debug: false
         },
 
         server: {
-            host: '127.0.0.1',
-            port: '2368'
+            host: '0.0.0.0',
+            port: process.env.PORT
         }
     },
 
@@ -90,11 +95,11 @@ config = {
                 filename: path.join(__dirname, '/content/data/ghost-test.db')
             },
             pool: {
-                afterCreate: function (conn, done) {
+                afterCreate: function(conn, done) {
                     conn.run('PRAGMA synchronous=OFF;' +
-                    'PRAGMA journal_mode=MEMORY;' +
-                    'PRAGMA locking_mode=EXCLUSIVE;' +
-                    'BEGIN EXCLUSIVE; COMMIT;', done);
+                        'PRAGMA journal_mode=MEMORY;' +
+                        'PRAGMA locking_mode=EXCLUSIVE;' +
+                        'BEGIN EXCLUSIVE; COMMIT;', done);
                 }
             },
             useNullAsDefault: true
@@ -113,11 +118,11 @@ config = {
         database: {
             client: 'mysql',
             connection: {
-                host     : '127.0.0.1',
-                user     : 'root',
-                password : '',
-                database : 'ghost_testing',
-                charset  : 'utf8'
+                host: '127.0.0.1',
+                user: 'root',
+                password: '',
+                database: 'ghost_testing',
+                charset: 'utf8'
             }
         },
         server: {
@@ -134,11 +139,11 @@ config = {
         database: {
             client: 'pg',
             connection: {
-                host     : '127.0.0.1',
-                user     : 'postgres',
-                password : '',
-                database : 'ghost_testing',
-                charset  : 'utf8'
+                host: '127.0.0.1',
+                user: 'postgres',
+                password: '',
+                database: 'ghost_testing',
+                charset: 'utf8'
             }
         },
         server: {
